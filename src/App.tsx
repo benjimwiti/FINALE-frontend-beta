@@ -20,7 +20,7 @@ function App() {
   useEffect(()=> {
     const testCors = async () => {
       try {
-        const req = await axios.get(`http://localhost:8000/user`)
+        const req = await axios.get(`https://gr-8-api.onrender.com/user`)
         console.log(req)  
         setUserList(req.data.users)
       } catch (error) {
