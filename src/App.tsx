@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import axios from 'axios'
 import { IUser } from './models/User'
+import Login from './features/auth/Login'
+import PersistAuth from './features/auth/PersistAuth'
 
 function App() {
   const [userList, setUserList] = useState<Array<IUser> | []>([])
@@ -15,7 +17,7 @@ function App() {
         </div>
     )
   })
-  : <p>No users found</p>
+  : <p> Loading...</p>
 
   useEffect(()=> {
     const testCors = async () => {
@@ -31,13 +33,21 @@ function App() {
     console.log(userList)
   },[])
 
+  const [flagUp, setFlagUp] = useState(false)
+  function handleFlag() {
+    setFlagUp(prev => !prev)
+  }
+
 
   return (
     <>
+        <PersistAuth>
       {displayList}
-      <button className="refetch">
+      { true && <Login/> }
+      <button className="refetch" onClick={handleFlag}>
         refetch
       </button>
+      </PersistAuth>
     </>
   )
 }
