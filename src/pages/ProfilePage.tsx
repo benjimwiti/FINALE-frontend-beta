@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../app/store/store'; // Update with your store setup
-import { useUpdateUserMutation } from '../app/api/apiSlice'; // Replace with your actual action
+import { useUpdateUserByIdMutation } from '../app/api/apiSlice'; // Replace with your actual action
 import { setUser } from '../app/store/slices/userSlice';
-import { Link } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
 import Sidebar from '../components/Common/SideBar';
 
@@ -12,7 +11,7 @@ const ProfilePage: React.FC = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({ _id:currentUser?._id, name: currentUser?.name, email: currentUser?.email, password: currentUser?.password}); // Initialize with current user data
   const [error, setError] = useState<string | null>(null);
-  const [updateUser] = useUpdateUserMutation()
+  const [updateUser] = useUpdateUserByIdMutation()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -23,9 +22,10 @@ const ProfilePage: React.FC = () => {
     try {
       // Update user details
       if(currentUser){
-        const { data } =await updateUser({  updatedUser: formData })
+        const { data } =await updateUser({id:currentUser._id,  updatedUser: formData })
         if(data){
             dispatch(setUser(data));
+            localStorage.setItem('user', JSON.stringify(data));
             console.log('User details updated successfully:', formData);
         }
         

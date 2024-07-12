@@ -4,9 +4,13 @@ import { Link ,useNavigate} from 'react-router-dom';
 import { FaHome, FaBell, FaSignOutAlt, FaTags, FaPlus, FaSearch } from 'react-icons/fa';
 import { AiOutlineAppstore } from "react-icons/ai";
 import Profile from '../Profile/Profile';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store/store';
 
 
 const Sidebar: React.FC = () => {
+  const taskCount = useSelector((state: RootState) => state.taskCount.count);
+
   const navigate = useNavigate()
 
   const handleLogout = ()=>{
@@ -42,9 +46,13 @@ const Sidebar: React.FC = () => {
             <FaPlus className="mr-3" />
             Create
           </Link>
-          <Link to="/notifications" className="flex items-center py-2 px-4 rounded-md text-gray-800 hover:bg-gray-200">
-            <FaBell className="mr-3" />
-            Notifications
+          <Link to="/notifications" className="flex items-center py-2 px-4 rounded-md text-gray-800 hover:bg-gray-200 relative">            
+              <FaBell className="mr-3" />
+              {/* Badge for task count */}
+              {taskCount > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">{taskCount}</span>
+              )}
+              Notifications
           </Link>
         </div>
       </div>

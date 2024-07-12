@@ -1,9 +1,12 @@
+
 import Sidebar from '../components/Common/SideBar';
 import React, { useState } from 'react';
 import { useCreateTaskMutation } from '../app/api/apiSlice';
 import { RootState } from '../app/store/store';
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { createTaskSuccess } from '../app/store/slices/taskSlice';
+/* import { addTask } from '../app/store/slices/taskSlice'; */
 
 const Create: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -11,8 +14,21 @@ const Create: React.FC = () => {
   const [label, setLabel] = useState('');
   const [dueDate, setDueDate] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+ 
+  /* const user= {
+    "_id": "668fc7a8241da77ed01d72d5",
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+  } */
 
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const user = {
+    "_id": "66902a533a29c357d9c127de",
+    "name": "yap",
+    "email": "yap@example.com"
+  };
+  /* const currentUser = useSelector((state: RootState) => state.user.currentUser); */
+  const currentUser = user
 
   const [createTask, { isLoading }] = useCreateTaskMutation();
 
@@ -22,15 +38,22 @@ const Create: React.FC = () => {
     if (currentUser) {
       const newTask = {
         title,
+        completed:false,
         description,
         label,
         dueDate: new Date(dueDate),
         userId: currentUser._id,
       };
+      console.log('Original due date:', dueDate);
+      console.log('Parsed due date:', new Date(dueDate));
+
 
       try {
         const result = await createTask(newTask).unwrap();
         console.log('Created task:', result);
+
+        /* dispatch(addTask(result)) */
+        dispatch(createTaskSuccess(result))
 
         setTitle('');
         setDescription('');
@@ -97,7 +120,8 @@ const Create: React.FC = () => {
               Due Date
             </label>
             <input
-              type='date'
+              type='datetime-local'
+              /* type='datetime-local' */
               id='dueDate'
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
@@ -112,7 +136,7 @@ const Create: React.FC = () => {
             }`}
             disabled={!isFormFilled || isLoading} // Disable button if form is not filled or if mutation is loading
           >
-           Create Task
+           {isLoading ? 'Creating...' : 'Create Task'}
           </button>
         </form>
       </div>
