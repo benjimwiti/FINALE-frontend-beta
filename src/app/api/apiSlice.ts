@@ -30,12 +30,12 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 
     //IF ACCESS TOKEN HAS EXPIRED
     if (result?.error?.status === 403) {
-        console.log('sending refresh token')
+        console.log('sending refresh token in cookie')
 
         // send refresh token to get new access token 
         const refreshResult = await baseQuery('/auth/refresh', api, extraOptions) as any
 
-        //IF REFRESH TOKEN HAS EXPIRED
+        //IF ACCESS TOKEN HAS EXPIRED
         if (refreshResult?.data) {
 
             // store the new token 
@@ -44,8 +44,11 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
             // retry original query with new access token
             result = await baseQuery(args, api, extraOptions)
         } else {
+            //REFRESH TOKEN HAS EXPIRED
             if (refreshResult?.error?.status === 403) {
                 refreshResult.error.data.message = "Your login has expired."
+                alert(`your Login has expired`)
+                //navigate('/login')
             }
             return refreshResult
         }

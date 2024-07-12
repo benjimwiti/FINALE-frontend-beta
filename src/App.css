@@ -26,3 +26,12 @@ body {
 .refetch {
   padding: 0.5rem;
 }
+
+.profile-pic {
+  width: 200px;
+  height: 200px;
+  border: 1px solid white;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}

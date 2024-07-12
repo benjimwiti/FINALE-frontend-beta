@@ -4,6 +4,9 @@ import axios from 'axios'
 import { IUser } from './models/User'
 import Login from './features/auth/Login'
 import PersistAuth from './features/auth/PersistAuth'
+import ImageTest from './features/images/ImageTest'
+import ProfileImage from './features/images/ProfilePicRender'
+
 
 function App() {
   const [userList, setUserList] = useState<Array<IUser> | []>([])
@@ -38,12 +41,15 @@ function App() {
     setFlagUp(prev => !prev)
   }
 
+const filename = 'avatar-1720800432833.jpg'
 
   return (
     <>
         <PersistAuth>
       {displayList}
-      { true && <Login/> }
+      { false && <Login/> }
+      { false && <ImageTest/> }
+      { true && <ProfileImage filename={filename}/> }
       <button className="refetch" onClick={handleFlag}>
         refetch
       </button>
