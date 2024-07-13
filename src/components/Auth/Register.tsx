@@ -16,6 +16,7 @@ const Register: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false); // State to track checkbox
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  //@ts-ignore
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
