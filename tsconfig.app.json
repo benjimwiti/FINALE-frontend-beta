@@ -25,10 +25,10 @@
 
     
   },
-  "exclude": [
+ /*  "exclude": [
       "node_modules",
       "dist",
       "src/app/api/apiSlice.ts"
-    ],
+    ], */
   "include": ["src"]
 }

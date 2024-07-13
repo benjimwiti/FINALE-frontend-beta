@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+/* import { useLoginUserMutation } from '../../app/api/apiSlice'; */
 import { useLoginUserMutation } from '../../app/api/apiSlice';
 import {  useDispatch} from 'react-redux';
 import { loginSuccess } from '../../app/store/slices/authSlice';
@@ -23,7 +24,7 @@ const Login: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-//Handle Form Submission
+//Handle Forme Submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
