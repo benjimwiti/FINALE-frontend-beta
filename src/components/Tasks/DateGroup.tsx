@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useFetchUserTasksQuery, User } from '../../app/api/apiSlice';
+import { useFetchUserTasksQuery } from '../../app/api/apiSlice';
 import TaskItem from './Task';
 import { Task } from '../../app/api/apiSlice';
 import { fetchTasksSuccess } from '../../app/store/slices/taskSlice';
@@ -25,8 +25,8 @@ const AllTasks: React.FC = () => {
   /* const currentUser = user; */
   const currentUser: any  = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
-
-  const { data: userTasks, isLoading } = useFetchUserTasksQuery(currentUser?._id);
+  // @ts-ignore
+  const { data: userTasks } = useFetchUserTasksQuery(currentUser?._id);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
 
   // State to hold grouped tasks
@@ -36,8 +36,9 @@ const AllTasks: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
-    
+    // @ts-ignore
     if (userTasks?.userTasks) {
+      // @ts-ignore
       dispatch(fetchTasksSuccess(userTasks.userTasks));
     }
   }, [userTasks, dispatch ]);

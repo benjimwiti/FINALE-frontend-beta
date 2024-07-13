@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../store/store';
+//@ts-ignore
+import * as typeRef from "../../../node_modules/@reduxjs/toolkit/dist/query/react/buildHooks"
 
 export type Task = {
   _id: string;

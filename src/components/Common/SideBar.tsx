@@ -6,7 +6,7 @@ import { AiOutlineAppstore } from "react-icons/ai";
 import Profile from '../Profile/Profile';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
-import { logoutAndClearTasks, logoutSuccess } from '../../app/store/slices/authSlice';
+import { logoutAndClearTasks} from '../../app/store/slices/authSlice';
 
 
 const Sidebar: React.FC = () => {
