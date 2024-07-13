@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineMessage } from 'react-icons/ai'; // Import the icon from react-icons library or any other icon library
-import { useSelector } from 'react-redux';
+/* import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
-
+ */
 
 
 const ChatIcon: React.FC = () => {
@@ -11,8 +11,8 @@ const ChatIcon: React.FC = () => {
   const [response, setResponse] = useState('');
   const [history, setHistory] = useState<{ query: string; response: string }[]>([]);
 
-  const currentUser: any  = useSelector((state: RootState) => state.auth.user);
-  const tasks: any  = useSelector((state: RootState) => state.tasks.tasks);
+  /* const currentUser: any  = useSelector((state: RootState) => state.auth.user);
+  const tasks: any  = useSelector((state: RootState) => state.tasks.tasks); */
 
   useEffect(() => {
     // Load chat history from localStorage when component mounts

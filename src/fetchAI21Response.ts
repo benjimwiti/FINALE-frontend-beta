@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const fetchAI21Response = async (prompt:any) => {
-  const apiKey = 'mCijfPiE7aQxnwASS0XpaPhLTzsbGOSO';  // Replace with your actual API key
+  const apiKey = 'mCijfPiE7aQxnwASS0XpPhLTzsbGOS';  // Replace with your actual API key
   const apiUrl = 'https://api.ai21.com/studio/v1/j1-large/complete';
 
   try {

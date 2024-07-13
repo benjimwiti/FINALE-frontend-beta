@@ -8,21 +8,23 @@ import { fetchTasksSuccess } from '../../app/store/slices/taskSlice';
 import { setTaskCount } from '../../app/store/slices/taskCountSlice';
 
 const Notifications: React.FC = () => {
-  const user = {
+  /* const user = {
     "_id": "66902a533a29c357d9c127de",
     "name": "yap",
     "email": "yap@example.com"
-  };
+  }; */
 
  /*  const currentUser = user; */
   const currentUser: any  = useSelector((state: RootState) => state.auth.user);
 
   const dispatch = useDispatch();
-  const { data: userTasks, isLoading } = useFetchUserTasksQuery(currentUser?._id);
+  const { data: userTasks } = useFetchUserTasksQuery(currentUser?._id);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
 
   useEffect(() => {
+    // @ts-ignore
     if (userTasks?.userTasks) {
+      // @ts-ignore
       dispatch(fetchTasksSuccess(userTasks.userTasks));
     }
 

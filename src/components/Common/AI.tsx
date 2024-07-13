@@ -14,6 +14,7 @@ const ChatIcon: React.FC = () => {
 
   const [showChat, setShowChat] = useState(false);
   const [query, setQuery] = useState('');
+  // @ts-ignore
   const [response, setResponse] = useState('');
   const [history, setHistory] = useState<{ query: string; response: string }[]>([]);
 
