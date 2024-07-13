@@ -4,17 +4,19 @@ import { Link ,useNavigate} from 'react-router-dom';
 import { FaHome, FaBell, FaSignOutAlt, FaTags, FaPlus, FaSearch } from 'react-icons/fa';
 import { AiOutlineAppstore } from "react-icons/ai";
 import Profile from '../Profile/Profile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
+import { logoutAndClearTasks, logoutSuccess } from '../../app/store/slices/authSlice';
 
 
 const Sidebar: React.FC = () => {
   const taskCount = useSelector((state: RootState) => state.taskCount.count);
-
+  const dispatch:any = useDispatch();
   const navigate = useNavigate()
 
   const handleLogout = ()=>{
-  
+    /* dispatch(logoutSuccess()); */
+    dispatch(logoutAndClearTasks());
     navigate('/signin')
   }
   return (

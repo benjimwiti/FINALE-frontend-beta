@@ -148,7 +148,7 @@ import { setUser } from '../../app/store/slices/userSlice';
 import { AppDispatch } from '../../app/store/store';
 import { RootState } from '../../app/store/store';
 import { loginSuccess } from '../../app/store/slices/authSlice';
-
+ 
 
 type FormData = {
   email: string;
@@ -159,9 +159,9 @@ const Login: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const dispatch:AppDispatch = useDispatch()
+  const dispatch = useDispatch()
   
-  const [loginUser] = useLoginUserMutation();
+  const [loginUser,{ isLoading }] = useLoginUserMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -172,13 +172,10 @@ const Login: React.FC = () => {
     try {
       const response = await loginUser(formData).unwrap();    
        
-      dispatch(loginSuccess({
-        user: response.user,
-        accessToken: response.token
-    })); 
+      dispatch(loginSuccess(response)); 
         console.log('Login successful:', response);
         navigate('/');
-      
+    
     } catch (err:any) {
       setError('Failed to login. Please try again.');
     }

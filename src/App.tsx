@@ -10,9 +10,9 @@ import Labels from './pages/Labels';
 import Create from './pages/Create';
 import Notification from './pages/NotificationPage';
 import EditTask from './pages/EditTask';
-function App() {
-  
 
+function App() {
+ 
   return (
     <BrowserRouter>      
       <Routes>

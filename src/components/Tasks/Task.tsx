@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Task } from '../../app/api/apiSlice'; 
-import { useDeleteTaskMutation } from '../../app/api/apiSlice';
+import { useDeleteTaskMutation, useUpdateTaskMutation } from '../../app/api/apiSlice';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaTrash, FaEdit, FaTag } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
@@ -15,18 +15,19 @@ const TaskItem: React.FC<Props> = ({ task }) => {
   const title = task?.title || 'Sample Task Title';
   const description = task?.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
   const label = task?.label || 'Sample Label';
-  const dueDate = task?.dueDate ? new Date(task.dueDate).toLocaleDateString() : '2024-07-31';
+  const dueDate = task?.dueDate ? new Date(task.dueDate).toLocaleString() : '2024-07-31';
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [deleteChosenTask] = useDeleteTaskMutation();
+  const [updateTask] = useUpdateTaskMutation(); 
 
-  const [completed, setCompleted] = useState(false); // State to track task completion
+  const [completed, setCompleted] = useState(task.completed || false); // State to track task completion
 
   const onEdit = () => {
     navigate(`/edit/${task?._id}`); 
   }
-
+ ///delete the task
   const onDelete = async () => {
     try {
       await deleteChosenTask(task?._id).unwrap();
@@ -36,8 +37,20 @@ const TaskItem: React.FC<Props> = ({ task }) => {
     }
   }
 
-  const toggleCompleted = () => {
-    setCompleted(!completed); // Toggle completion state
+  const toggleCompleted = async() => {
+   /*  setCompleted(!completed); // Toggle completion state */
+
+    try {
+      const updatedTask = {
+        ...task,
+        completed: !completed  // Toggle completion state
+      };
+      const { _id, ...updatedFields } = updatedTask;
+      await updateTask({ id: task._id, task: { completed: updatedFields.completed } }); // Update task on backend
+      setCompleted(!completed); // Update local state
+    } catch (error) {
+      console.log("Failed to update task", error);
+    }
   }
 
   return (

@@ -6,6 +6,7 @@ import Sidebar from '../components/Common/SideBar';
 import { updateTaskSuccess } from '../app/store/slices/taskSlice';
 import { RootState } from '../app/store/store';
 import { useSelector,  useDispatch } from 'react-redux';
+import AIChat from '../components/Common/AIChat'
 /* import { updateTask } from '../app/store/slices/taskSlice'; */
 
 const EditTask: React.FC = () => {
@@ -134,6 +135,7 @@ const EditTask: React.FC = () => {
             {isUpdating ? 'Updating...' : 'Update Task'}
           </button>
         </form>
+        <AIChat/>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { RootState } from '../app/store/store';
 import { useSelector , useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createTaskSuccess } from '../app/store/slices/taskSlice';
+import AIChat from '../components/Common/AIChat'
 /* import { addTask } from '../app/store/slices/taskSlice'; */
 
 const Create: React.FC = () => {
@@ -22,13 +23,14 @@ const Create: React.FC = () => {
     "email": "john.doe@example.com"
   } */
 
-  const user = {
+  /* const user = {
     "_id": "66902a533a29c357d9c127de",
     "name": "yap",
     "email": "yap@example.com"
-  };
+  }; */
   /* const currentUser = useSelector((state: RootState) => state.user.currentUser); */
-  const currentUser = user
+  /* const currentUser = user */
+  const currentUser: any  = useSelector((state: RootState) => state.auth.user);
 
   const [createTask, { isLoading }] = useCreateTaskMutation();
 
@@ -139,6 +141,7 @@ const Create: React.FC = () => {
            {isLoading ? 'Creating...' : 'Create Task'}
           </button>
         </form>
+        <AIChat/>
       </div>
     </div>
   );

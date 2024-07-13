@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useFetchUserTasksQuery } from '../../app/api/apiSlice';
+import { useFetchUserTasksQuery, User } from '../../app/api/apiSlice';
 import TaskItem from './Task';
 import { Task } from '../../app/api/apiSlice';
 import { fetchTasksSuccess } from '../../app/store/slices/taskSlice';
@@ -16,13 +16,14 @@ const AllTasks: React.FC = () => {
     "name": "John Doe",
     "email": "john.doe@example.com"
   };  */
-  const user = {
+  /* const user = {
     "_id": "66902a533a29c357d9c127de",
     "name": "yap",
     "email": "yap@example.com"
   };
-
-  const currentUser = user;
+ */
+  /* const currentUser = user; */
+  const currentUser: any  = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
 
   const { data: userTasks, isLoading } = useFetchUserTasksQuery(currentUser?._id);
@@ -35,10 +36,11 @@ const AllTasks: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
+    
     if (userTasks?.userTasks) {
       dispatch(fetchTasksSuccess(userTasks.userTasks));
     }
-  }, [userTasks, dispatch]);
+  }, [userTasks, dispatch ]);
 
   // Effect to update grouped tasks when tasks or userTasks change
   useEffect(() => {
@@ -54,7 +56,7 @@ const AllTasks: React.FC = () => {
     const groupedTasks: { [key: string]: Task[] } = {};
 
     tasks.forEach(task => {
-      const dueDate = new Date(task.dueDate).toLocaleDateString();
+      const dueDate = new Date(task.dueDate).toLocaleString();
       if (!groupedTasks[dueDate]) {
         groupedTasks[dueDate] = [];
         // Initialize dropdown state for each group
@@ -106,7 +108,7 @@ const AllTasks: React.FC = () => {
               className="bg-gray-200 hover:bg-gray-300 py-2 px-4 w-full rounded-md text-left"
               onClick={() => toggleDropdown(dueDate)}
             >
-              {dueDate}
+              Tasks Due: {dueDate}
             </button>
             <div className={`mt-2 ${isDropdownOpen[dueDate] ? 'block' : 'hidden'}`}>
               {groupedTasks[dueDate].length > 0 && (

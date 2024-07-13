@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
-import userReducer/* , { restoreUser } */from './slices/userSlice';
 import taskReducer from './slices/taskSlice'; 
 import authReducer from "./slices/authSlice" 
 import taskCountReducer from './slices/taskCountSlice'
@@ -8,8 +7,7 @@ import taskCountReducer from './slices/taskCountSlice'
 const store = configureStore({
     reducer: {
         [apiSlice.reducerPath]: apiSlice.reducer,
-        auth: authReducer, 
-        user: userReducer,
+        auth: authReducer,         
         tasks: taskReducer, 
         taskCount: taskCountReducer,
     },

@@ -1,27 +1,81 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegisterUserMutation } from '../../app/api/apiSlice';
+import { FaUserCircle } from 'react-icons/fa';
+import axios from 'axios';
 
 type FormData = {
   name: string;
   email: string;
   password: string;
+  avatar?: string;
 };
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({ name: '', email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false); // State to track checkbox
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
   const [registerUser] = useRegisterUserMutation();
-
+ 
+  //handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+     setFormData({ ...formData, [e.target.id]: e.target.value }); 
+    
+  };
+ //handle avatar change
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+
+      uploadImage(file)
+      .then((response) => {
+        const imageUrl = response.file; // Ensure this is how backend sends the image URL
+        console.log('Image uploaded successfully:', imageUrl);
+
+        setFormData({ ...formData, avatar: imageUrl }); // Update formData with the image URL
+      })
+      .catch((error) => {
+        console.error('Failed to upload image:', error);
+        // Handle error state or retry logic if needed
+      });
+
+    }
+  };
+
+  //handle avatar click
+  const handleAvatarClick = () => {
+    const fileInput = document.getElementById('avatar') as HTMLInputElement;
+    fileInput.click();
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTermsAccepted(e.target.checked);
+  };
+
+  const uploadImage = async (imageFile: File) => {
+    const imageData = new FormData();
+    imageData.append('avatar', imageFile);
+
+    try {
+      const response = await axios.post('http://localhost:8000/uploads/upload-avatar', imageData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        
+        
+      });
+      console.log("imageUploaded", response.data);
+      return response.data; // Assuming the server returns the image URL in the response
+    } catch (err) {
+      console.error('Failed to upload image', err);
+      throw err;
+    }
   };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,6 +104,28 @@ const Register: React.FC = () => {
       </div>
       <form onSubmit={handleRegister} className='flex flex-col gap-4'>
         <div className='flex flex-col'>
+        {avatarPreview ? (
+            <img
+              src={avatarPreview}
+              alt='Avatar Preview'
+              className='w-24 h-24 rounded-full mb-4 object-cover'
+              onClick={handleAvatarClick}
+              style={{ cursor: 'pointer' }}
+            />
+          ) : (
+            <FaUserCircle
+              className='w-24 h-24 text-gray-400 mb-4'
+              onClick={handleAvatarClick}
+              style={{ cursor: 'pointer' }}
+            />
+          )}
+          <input
+            type='file'
+            id='avatar'
+            className='hidden'
+            onChange={handleAvatarChange}
+            accept='image/*'
+          />
           <label htmlFor='name' className='mb-1'>Name</label>
           <input
             type='text'
@@ -84,7 +160,7 @@ const Register: React.FC = () => {
             value={formData.password}
             required
           />
-        </div>
+        </div>        
         <div className='px-5 flex items-center mt-4'>
           <input
             type='checkbox'

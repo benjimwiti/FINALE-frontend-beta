@@ -14,7 +14,9 @@ const AllTasks: React.FC = () => {
     "email": "yap@example.com"
   };
 
-  const currentUser = user;
+  /* const currentUser = user; */
+  const currentUser: any  = useSelector((state: RootState) => state.auth.user);
+
   const dispatch = useDispatch();
   const { data: userTasks, isLoading } = useFetchUserTasksQuery(currentUser?._id);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
@@ -23,7 +25,7 @@ const AllTasks: React.FC = () => {
     if (userTasks?.userTasks) {
       dispatch(fetchTasksSuccess(userTasks.userTasks));
     }
-  }, [userTasks, dispatch]);
+  }, [userTasks, dispatch,currentUser]);
 
   // Function to group tasks by label
   const groupTasksByLabel = (tasks: Task[]) => {

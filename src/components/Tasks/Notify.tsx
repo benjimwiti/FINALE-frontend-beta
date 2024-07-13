@@ -14,7 +14,9 @@ const Notifications: React.FC = () => {
     "email": "yap@example.com"
   };
 
-  const currentUser = user;
+ /*  const currentUser = user; */
+  const currentUser: any  = useSelector((state: RootState) => state.auth.user);
+
   const dispatch = useDispatch();
   const { data: userTasks, isLoading } = useFetchUserTasksQuery(currentUser?._id);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
@@ -24,10 +26,12 @@ const Notifications: React.FC = () => {
       dispatch(fetchTasksSuccess(userTasks.userTasks));
     }
 
+    
+
     // Update the task count in Redux store
     const notificationsCount = getTasksDueWithinOneDay(tasks).length;
     dispatch(setTaskCount(notificationsCount));
-  }, [userTasks,tasks, dispatch]);
+  }, [userTasks,tasks, dispatch, currentUser]);
 
   // Function to filter tasks due within one day from now
   const getTasksDueWithinOneDay = (tasks: Task[]): Task[] => {

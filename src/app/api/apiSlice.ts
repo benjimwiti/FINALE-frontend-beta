@@ -16,13 +16,14 @@ export type User = {
   name: string;
   email: string;
   password: string;
+  avatar?: string;
   tasks: Task[]
 };
 
-export interface RefreshResponse {
+/* export interface RefreshResponse {
   accessToken: string;
 }
-
+ */
 export interface Headers{
   [key: string]: string;
 }
@@ -31,8 +32,8 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
       baseUrl: 'http://localhost:8000',
-      credentials: 'include',
-      prepareHeaders: (headers, { getState }) => {
+      credentials: 'include'
+      /* prepareHeaders: (headers, { getState }) => {
         const state = getState() as RootState;
         const token = state.auth.token;
 
@@ -40,7 +41,7 @@ export const apiSlice = createApi({
             headers.set("Authorization", `Bearer ${token}`);
         }
         return headers;
-    }
+    } */
      }), // Adjust the base URL as needed
   tagTypes: ['Task'],
   endpoints: (builder) => ({
@@ -56,7 +57,7 @@ export const apiSlice = createApi({
     }),
     // Fetch User Tasks
     fetchUserTasks: builder.query<Task[], string>({
-      query: (userId) => `/tasks/${userId}`,
+      query: (userId) => `user/tasks/${userId}`,
       providesTags: ['Task'], // Adjust the endpoint URL as per your backend
     }),
     // Create a new Task
@@ -98,15 +99,21 @@ export const apiSlice = createApi({
       }),
     }),
     
-    loginUser: builder.mutation<{ token: string; user: User }, Partial<User>>({
+    loginUser: builder.mutation<User , Partial<User>>({
       query: (credentials) => ({
         url: '/auth/login',
         method: 'POST',
         body: credentials,
       }),
     }),
-    refreshToken: builder.query<RefreshResponse, void>({
-      query: () => '/refresh',
+    refreshToken: builder.query<User, void>({
+      query: () => '/auth/refresh',
+    }),
+    logoutUser: builder.mutation<void, void>({
+      query: () => ({
+        url: '/auth/logout',
+        method: 'POST', // Usually logout endpoints use POST for actions that modify server state
+      }),
     }),
     
 
@@ -114,23 +121,23 @@ export const apiSlice = createApi({
 
     //user endpoints
     getUserById: builder.query<User, string>({
-      query: (id) => `/users/${id}`,
+      query: (id) => `/user/${id}`,
     }),
-    /* getAllUsers: builder.query<User[], void>({
-      query: () => '/users',
+    // getAllUsers: builder.query<User[], void>({
+    //  query: () => '/users',
       // Assuming the response shape includes `users` as an array of User objects
-      transformResponse: (response: { users: User[] }) => response.users,
-    }), */
+     // transformResponse: (response: { users: User[] }) => response.users,
+    //}), 
     updateUserById: builder.mutation<User, { id: string; updatedUser: Partial<User> }>({
       query: ({ id, updatedUser }) => ({
-        url: `/users/${id}`,
+        url: `/user/${id}`,
         method: 'PUT',
         body: updatedUser,
       }),
     }),
     deleteUserById: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
-        url: `/users/${id}`,
+        url: `/user/${id}`,
         method: 'DELETE',
       }),
     }),
@@ -149,8 +156,9 @@ export const {
   useGetUserByIdQuery,
   useRefreshTokenQuery,
   useFetchUserTasksQuery,
-  useUpdateTaskMutation
+  useUpdateTaskMutation,
+  useLogoutUserMutation
+
 } = apiSlice;
  
-
 
