@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useGetTaskByIdQuery, useUpdateTaskMutation } from '../app/api/apiSlice';
 import Sidebar from '../components/Common/SideBar';
 import { updateTaskSuccess } from '../app/store/slices/taskSlice';
-import { RootState } from '../app/store/store';
+//@ts-ignore
 import { useSelector,  useDispatch } from 'react-redux';
 import AIChat from '../components/Common/AIChat'
 /* import { updateTask } from '../app/store/slices/taskSlice'; */
