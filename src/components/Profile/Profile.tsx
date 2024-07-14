@@ -16,7 +16,8 @@ const Profile: React.FC= () => {
       <Link to="/profile" className="flex items-center space-x-2">
         {currentUser?.avatar ? (
           <img
-            src={`http://localhost:8000/uploads/${currentUser.avatar}`}
+            src={`https://gr-8-api.onrender.com/uploads/${currentUser.avatar}`} 
+            /* src={`http://localhost:8000/uploads/${currentUser.avatar}`} */
             alt="User Avatar"
             className="w-8 h-8 rounded-full object-cover"
           />

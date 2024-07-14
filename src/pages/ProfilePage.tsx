@@ -47,7 +47,8 @@ const ProfilePage: React.FC = () => {
           {/* <FaUserCircle size={100} /> */}
           {currentUser?.avatar ? (
            <img
-            src={`http://localhost:8000/uploads/${currentUser.avatar}`}
+            src={`https://gr-8-api.onrender.com/uploads/${currentUser.avatar}`} 
+           /*  src={`http://localhost:8000/uploads/${currentUser.avatar}`} */
             alt="User Avatar"
             className="w-8 h-8 rounded-full object-cover"
             style={{ width: '100px', height: '100px' }}

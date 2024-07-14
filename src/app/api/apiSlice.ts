@@ -32,7 +32,8 @@ export interface Headers{
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-      baseUrl: 'http://localhost:8000',
+       /* baseUrl: 'http://localhost:8000',  */
+       baseUrl: 'https://gr-8-api.onrender.com', 
       credentials: 'include'
       /* prepareHeaders: (headers, { getState }) => {
         const state = getState() as RootState;
