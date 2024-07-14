@@ -7,6 +7,8 @@ import { useSelector , useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createTaskSuccess } from '../app/store/slices/taskSlice';
 import AIChat from '../components/Common/AIChat'
+import Footer from '../components/Common/Footer';
+import Navbar from '../components/Common/Navbar';
 /* import { addTask } from '../app/store/slices/taskSlice'; */
 
 const Create: React.FC = () => {
@@ -73,7 +75,10 @@ const Create: React.FC = () => {
   const isFormFilled = title !== '' && description !== '' && label !== '' && dueDate !== '';
 
   return (
+    <div className='content'>
     <div className='flex h-screen'>
+      <Footer />
+      <Navbar/>
       <Sidebar />
       <div className='flex-1 p-4'>
         <div>Create Task</div>
@@ -143,6 +148,7 @@ const Create: React.FC = () => {
         </form>
         <AIChat/>
       </div>
+    </div>
     </div>
   );
 };

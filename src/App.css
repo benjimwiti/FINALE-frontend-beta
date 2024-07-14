@@ -1,0 +1,67 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position:relative;
+  }
+  
+  .content {
+    flex: 1;
+    padding-top: 100px;
+    
+    
+  }
+  
+  .navbar {
+    background-color: white;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid black;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+  }
+  
+  .footer {
+    background-color: white;
+    color: black;
+    padding-top: 32px;
+    padding-bottom: 32px;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    min-width:100vw;
+    box-shadow:4px 4px 6px rgba(0, 0, 0, 0.1) ;
+  }
+  
+  .sidebar {
+    display: none;
+  }
+  
+  @media only screen and (min-width: 768px) {
+    .navbar, .footer {
+      display: none;
+    }
+  
+    .sidebar {
+      display: block;
+      width: 200px;
+      background-color: #f0f0f0;
+     
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+    }
+  
+    .content {
+      margin-left: 200px;
+      z-index:1;
+      position:relative;
+      padding-left: 70px;
+    }
+  }
