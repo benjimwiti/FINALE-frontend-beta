@@ -48,7 +48,7 @@ const ChatIcon: React.FC = () => {
   const isSendDisabled = query.trim().length === 0; // Disable send button if query is empty
 
   return (
-    <div>
+    <div >
       <button
         className="fixed bottom-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg"
         onClick={toggleChat}

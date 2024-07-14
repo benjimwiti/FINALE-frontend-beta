@@ -7,6 +7,8 @@ import { updateTaskSuccess } from '../app/store/slices/taskSlice';
 //@ts-ignore
 import { useSelector,  useDispatch } from 'react-redux';
 import AIChat from '../components/Common/AIChat'
+import Footer from '../components/Common/Footer';
+import Navbar from '../components/Common/Navbar';
 /* import { updateTask } from '../app/store/slices/taskSlice'; */
 
 const EditTask: React.FC = () => {
@@ -68,7 +70,10 @@ const EditTask: React.FC = () => {
   if (isLoadingTask) return <div>Loading...</div>;
 
   return (
+    <div className='content'>
     <div className='flex h-screen'>
+      <Footer />
+      <Navbar />
       <Sidebar />
       <div className='flex-1 p-4'>
         <div>Edit Task</div>
@@ -137,6 +142,7 @@ const EditTask: React.FC = () => {
         </form>
         <AIChat/>
       </div>
+    </div>
     </div>
   );
 };

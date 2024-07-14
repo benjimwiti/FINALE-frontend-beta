@@ -6,6 +6,8 @@ import { FaUserCircle } from "react-icons/fa";
 import Sidebar from '../components/Common/SideBar';
 import { updateUserSuccess } from '../app/store/slices/authSlice';
 import AIChat from '../components/Common/AIChat'
+import Footer from '../components/Common/Footer';
+import Navbar from '../components/Common/Navbar';
 
 const ProfilePage: React.FC = () => {
   const currentUser = useSelector((state: RootState) => state.auth.user);
@@ -39,7 +41,10 @@ const ProfilePage: React.FC = () => {
   };
  
   return (
+    <div className='content'>
     <div className="flex h-screen">
+      <Navbar/>
+      <Footer/>
       <Sidebar /> 
     <div className="p-3 max-w-lg mx-auto">        
         <h1 className="text-3xl text-left font-semibold my-7">Edit Profile</h1>
@@ -103,6 +108,7 @@ const ProfilePage: React.FC = () => {
         </form>
         <AIChat/>
       </div>
+    </div>
     </div>
   );
 };

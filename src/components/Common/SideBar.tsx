@@ -20,6 +20,7 @@ const Sidebar: React.FC = () => {
     navigate('/signin')
   }
   return (
+    <div className='sidebar'>
     <div className="bg-[#E2EDF8] h-screen p-5 w-64 flex flex-col justify-between">
       <div>
         <Profile />
@@ -65,6 +66,7 @@ const Sidebar: React.FC = () => {
       <FaSignOutAlt className="mr-3" />
       Logout
     </button>
+    </div>
     </div>
   );
 };
