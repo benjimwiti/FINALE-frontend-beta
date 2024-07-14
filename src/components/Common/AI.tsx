@@ -101,7 +101,7 @@ const ChatIcon: React.FC = () => {
 
     try {
       // Example using fetch to create a task via backend API
-      const response = await fetch('http://localhost:8000/tasks', { 
+      const response = await fetch('https://gr-8-api.onrender.com/tasks', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ const ChatIcon: React.FC = () => {
 
     try {
       // Example using fetch to update a task via backend API
-      const response = await fetch(`http://localhost:8000/tasks/task/${selectedTaskId}`, {
+      const response = await fetch(`https://gr-8-api.onrender.com/tasks/task/${selectedTaskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ const ChatIcon: React.FC = () => {
 
     try {
       // Example using fetch to delete a task via backend API
-      const response = await fetch(`http://localhost:8000/tasks/task/${selectedTaskId}`, {
+      const response = await fetch(`https://gr-8-api.onrender.com/tasks/task/${selectedTaskId}`, {
         method: 'DELETE',
       });
 

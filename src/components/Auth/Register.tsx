@@ -64,10 +64,14 @@ const Register: React.FC = () => {
     imageData.append('avatar', imageFile);
 
     try {
-      const response = await axios.post('http://localhost:8000/uploads/upload-avatar', imageData, {
+       const response = await axios.post('https://gr-8-api.onrender.com/uploads/upload-avatar', imageData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-        },
+        }, 
+       /*  const response = await axios.post('http://localhost:8000/uploads/upload-avatar', imageData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }, */
         
         
       });
