@@ -1,7 +1,6 @@
 import React from 'react'
 import Sidebar from '../components/Common/SideBar'
 import AllTasks from '../components/Tasks/LabelGroup'
-/* import AIChat from '../components/Common/AIChat' */
 import AI from '../components/Common/AI'
 
 const Labels: React.FC = () => {
