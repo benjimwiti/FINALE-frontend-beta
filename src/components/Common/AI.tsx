@@ -358,10 +358,11 @@ const ChatIcon: React.FC = () => {
         <AiOutlineMessage size={24} />
       </button>
       {showChat && (
-        <div className="fixed bottom-12 right-4 bg-white p-4 shadow-lg rounded-lg" style={{ width: '400px' }}>
+        <div className="fixed bottom-12 right-4 bg-slate-100 p-4 shadow-lg rounded-lg " style={{ width: '400px' }}>
+          <p className="text-center text-sm font-bold mb-2">Our AI can: answer questions,  create, edit and delete 1 or more tasks at a time (give proper details)</p>
           <div className="overflow-y-auto max-h-80">
             {history.map((item, index) => (
-              <div key={index} className="mb-2">
+              <div key={index} className="mb-2 px-2 bg-white rounded-lg">
                 <div className="text-right pr-4">
                   <p className="font-bold">You:</p>
                   <p>{item.query}</p>
