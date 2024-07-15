@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useRegisterUserMutation } from '../../app/api/apiSlice';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
+import { URL as url } from '../../URL';
 
 type FormData = {
   name: string;
@@ -64,7 +65,7 @@ const Register: React.FC = () => {
     imageData.append('avatar', imageFile);
 
     try {
-       const response = await axios.post('https://gr-8-api.onrender.com/uploads/upload-avatar', imageData, {
+       const response = await axios.post(`${url}/uploads/upload-avatar`, imageData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }, 

@@ -5,7 +5,8 @@ import { useUpdateUserByIdMutation } from '../app/api/apiSlice'; // Replace with
 import { FaUserCircle } from "react-icons/fa";
 import Sidebar from '../components/Common/SideBar';
 import { updateUserSuccess } from '../app/store/slices/authSlice';
-import AIChat from '../components/Common/AIChat'
+import AI from '../components/Common/AI'
+import { URL as url } from '../URL';
 
 const ProfilePage: React.FC = () => {
   const currentUser = useSelector((state: RootState) => state.auth.user);
@@ -47,7 +48,7 @@ const ProfilePage: React.FC = () => {
           {/* <FaUserCircle size={100} /> */}
           {currentUser?.avatar ? (
            <img
-            src={`https://gr-8-api.onrender.com/uploads/${currentUser.avatar}`} 
+            src={`${url}/uploads/${currentUser.avatar}`} 
            /*  src={`http://localhost:8000/uploads/${currentUser.avatar}`} */
             alt="User Avatar"
             className="w-8 h-8 rounded-full object-cover"
@@ -101,7 +102,7 @@ const ProfilePage: React.FC = () => {
             Save Changes
           </button>
         </form>
-        <AIChat/>
+        <AI/>
       </div>
     </div>
   );

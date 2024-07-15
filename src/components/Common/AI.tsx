@@ -1,22 +1,27 @@
-/* ******* DONT MODIFY THIS COMPONENT ************ */
 import React, { useState, useEffect } from 'react';
 import { AiOutlineMessage } from 'react-icons/ai'; // Import the icon from react-icons library or any other icon library
-import { useDispatch, useSelector } from 'react-redux';
+ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
-import { createTaskSuccess, updateTaskSuccess, deleteTaskSuccess  } from '../../app/store/slices/taskSlice';
-import fetchAI21Response from '../../fetchAI21Response'
+import { createTaskSuccess, updateTaskSuccess, deleteTaskSuccess  } from '../../app/store/slices/taskSlice'; 
+import { destructureUserQueryByAI } from '../../agents-master/js_files/main';
+import { URL } from '../../URL';
+import { getTaskGuilty, updateTaskGuilty } from '../../agents-master/js_files/plasticine';
+import { generateFinalAnswer } from '../../agents-master/js_files/finale';
+import { goodDate } from '../../agents-master/js_files/workflow_functions';
+
 
 
 const ChatIcon: React.FC = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.auth.user);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
-
+ 
   const [showChat, setShowChat] = useState(false);
   const [query, setQuery] = useState('');
   // @ts-ignore
   const [response, setResponse] = useState('');
-  const [history, setHistory] = useState<{ query: string; response: string }[]>([]);
+  const [history, setHistory] = useState<{ query: any; response: any }[]>([]);
+  
 
   useEffect(() => {
    
@@ -34,79 +39,150 @@ const ChatIcon: React.FC = () => {
     if (!query.trim()) {
       return; // Do not submit empty queries
     }
-  /*
-    // Simulate AI response with dummy data
-    const dummyResponse = `create task`;
-    const newHistoryItem = { query, response: dummyResponse };
-    const newHistory = [...history, newHistoryItem];
-
-    // Update state and localStorage with new history
-    setHistory(newHistory);
-    localStorage.setItem('chatHistory', JSON.stringify(newHistory));
-
-    setResponse(dummyResponse);
-
-    handleAiResponse(dummyResponse);
-   */
-    
-    // Example using fetch to send query to backend API
+  
     try {
-      const response  = await fetchAI21Response(query);
+      const response  = await destructureUserQueryByAI({
+        'query':query,
+        'ref_query':'',
+        'q_type': "TBD",
+        'task_output': [],
+        'multiple': false,
+        'num_tasks':0,
+        'date':[]
+    })
+     
+    console.log("########",response.task_output[0],"########");
+    
+    /* const aiTask = response.task_output[0] */
+    const aiResponse:any = response
 
-      if (!response.ok) {
-        throw new Error('Failed to get AI response');
-      }
-
-      const aiResponse = response // Adjust according to your API response structure
+    /* handleAiResponse(aiResponse, aiTask); */
+    handleTasks(aiResponse.task_output, aiResponse)
+    
+         
 
       
-      const newHistoryItem = { query, response };
+      /* const newHistoryItem = { query, response:response.task_output[0]?.GQ };
       const newHistory = [...history, newHistoryItem];
-      setResponse(aiResponse);
-      
-
-      // Update chat history
       setHistory(newHistory);
-
-      // Handle task operations based on AI response
-      handleAiResponse(aiResponse);
+      localStorage.setItem('chatHistory', JSON.stringify(newHistory)); */
+           
     } catch (error) {
       console.error('Error sending query to AI:', error);
     }
-   
+    
     setQuery(''); // Clear the query input after submitting
   };
 
-  const handleAiResponse = (aiResponse: string) => {
-    // Example: Parse AI response to perform task operations
-    if (aiResponse.includes('create task')) {
-      handleCreateTask();
-    } else if (aiResponse.includes('update task')) {
-      handleUpdateTask();
-    } else if (aiResponse.includes('delete task')) {
-      handleDeleteTask();
-    }
-  };
+  async function handleTasks(taskOutput:any, aiResponse:any) {
+    let response1:any =''
+    
+    //@ts-ignore
+    taskOutput.forEach(task => {
+        const [taskType, taskDetails] = Object.entries(task)[0];
+        
+        switch (taskType) {
+            case 'CTQ':
+              handleCreateTask(taskDetails);
+                console.log("test",taskDetails);
+                break;
+            case 'UTQ':
+              handleUpdateTask(taskDetails);
+              console.log("test 2",taskDetails);
+                break;
+            case 'DTQ':
+              handleDeleteTask(taskDetails);
+              console.log("test 3",taskDetails);
+                break;
+            case 'GQ':
+              response1 = taskDetails
+                console.log("test 4", taskDetails);
+                break;
+            default:
+                console.log("test 5 err", taskType);
+        }
+    });
 
-  const handleCreateTask = async () => {
-    // Example of creating a task
-    const newTaskData = {
-      title: 'ni oin Task',
-      description: 'This is a new task',
-      label: 'Important',
-      dueDate: '2024-07-31',
-      completed: false,
-      userId: currentUser?._id,
-    };
+      let summary=await generateFinalAnswer(aiResponse)
+      console.log("The following have happened",summary)
+
+      /* const aioutput = response1?response1:summary */
+
+      const aioutput = response1+summary
+
+      const newHistoryItem = { query, response: aioutput };
+      const newHistory = [...history, newHistoryItem];
+      setHistory(newHistory);
+      localStorage.setItem('chatHistory', JSON.stringify(newHistory));
+}
+
+ /*   const handleAiResponse = (aiResponse: any, task:any) => {
+    // Example: Parse AI response to perform task operations
+     let response1 =''
+     //@ts-ignore
+     aiResponse.task_output.forEach(task=>{
+
+    })  
+    if (aiResponse.task_output[0]?.CTQ) {
+      handleCreateTask(task);
+      
+      response1 ="task will be created"
+      console.log("task will be created")
+    } else if (aiResponse.task_output[0]?.UTQ) {
+      handleUpdateTask(task);
+
+      response1 ="task will be deleted"
+     console.log("task will be updated")
+    } else if (aiResponse.task_output[0]?.DTQ) {
+      handleDeleteTask(task);
+
+      response1 ="task will be deleted"
+     console.log("task will be deleted")
+    }else if (aiResponse.task_output[0]?.GQ) {
+     
+      console.log("General Question")
+      response1 =aiResponse.task_output[0]?.GQ
+    }else{
+      console.log("No task operation found")
+      
+    }
+
+      const newHistoryItem = { query, response: response1 };
+      const newHistory = [...history, newHistoryItem];
+      setHistory(newHistory);
+      localStorage.setItem('chatHistory', JSON.stringify(newHistory));
+    
+    
+  };   */
+
+  const handleCreateTask = async (task:any) => {
+
+    
+    
 
     try {
-      // Example using fetch to create a task via backend API
-      const response = await fetch('https://gr-8-api.onrender.com/tasks', { 
+      const responseTask =task/* ?.CTQ */
+
+      console.log(task);
+      
+
+      const validDate =await goodDate(responseTask.Date, responseTask.Time)
+      console.log("%%%%%%",validDate)
+
+      const createTask = {
+        userId: currentUser?._id,
+        title: responseTask.Title,
+        description: responseTask.Description,
+        dueDate:new Date( validDate),
+        completed: false,
+        label: responseTask.Label
+      };
+      const response = await fetch(`${URL}/tasks`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newTaskData),
+        body: JSON.stringify(createTask),
       });
 
       if (!response.ok) {
@@ -120,58 +196,156 @@ const ChatIcon: React.FC = () => {
       console.error('Error creating task:', error);
     }
   };
-
-  const handleUpdateTask = async () => {
+ 
+  const handleUpdateTask = async (task:any) => {
     // Example of updating a task (assuming you have a selected task to update)
-    const selectedTaskId = tasks[0]._id; // Example: Get the first task id for updating
+     
+     const responseTask =task/* ?.UTQ */
+     const prevDate =responseTask.PDATE
+     const summary = responseTask.PSUMMARY
+     const date = responseTask.Date
+     const time = responseTask.Time
+     const prevTime = responseTask.PTIME
+     
+     const resendAI = [{
+      "previous TaskDate":prevDate,
+      "taskSummary":summary,
+      "updated new Date":date,
+      "updated new Time":time,
+      "previous Task Time":prevTime
+     }
+      
+     ]
+     
+     console.log(resendAI)
+     
+     //filter tasks by date
+     const filteredTasks = filterTasksByDate(tasks, '2024-07-15')
 
-    const updatedTaskData = {
-      title: 'Updated Task Title',
-      description: 'Updated Task Description',
-    };
+     console.log(filteredTasks)
 
-    try {
+    const result = await updateTaskGuilty(await getTaskGuilty(filteredTasks, responseTask), responseTask)
+    console.log(result)
+  
+      try {
       // Example using fetch to update a task via backend API
-      const response = await fetch(`https://gr-8-api.onrender.com/tasks/task/${selectedTaskId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedTaskData),
-      });
-
-      if (!response.ok) {
+      const updatedResponse:any  = await updateTaskGuilty(await getTaskGuilty(filteredTasks, responseTask), responseTask)
+      console.log(updatedResponse) 
+      /* if (!updatedResponse.ok) {
         throw new Error('Failed to update task');
-      }
+      } */
 
-      const updatedTask = await response.json(); // Assuming backend returns updated task data
-      // Dispatch Redux action to update tasks state locally
-      dispatch(updateTaskSuccess(updatedTask));
+     const aiUpdatedTask = updatedResponse
+
+
+
+      try {
+        const date= aiUpdatedTask.dueDate
+        const validDate = date.slice(0, 16);
+        console.log(validDate)
+        const updatedTaskData = {
+          userId: currentUser?._id,
+          _id: aiUpdatedTask._id,
+          title: aiUpdatedTask.title,
+          description: aiUpdatedTask.description,
+          dueDate:   /* aiUpdatedTask.dueDate  */ new Date( validDate),
+          completed: aiUpdatedTask.completed,
+          label: aiUpdatedTask.label
+      }
+      console.log(updatedTaskData)
+        const response = await fetch(`${URL}/tasks/task/${updatedTaskData._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedTaskData),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to update task');
+        }
+  
+        const updatedTask = await response.json(); // Assuming backend returns updated task data
+        // Dispatch Redux action to update tasks state locally
+        dispatch(updateTaskSuccess(updatedTask));
+      } catch (error) {
+        console.error('Error updating task:', error);
+      }      
     } catch (error) {
       console.error('Error updating task:', error);
-    }
+    }  
   };
 
-  const handleDeleteTask = async () => {
-    // Example of deleting a task (assuming you have a selected task to delete)
-    const selectedTaskId = tasks[0]._id; // Example: Get the first task id for deletion
+  const handleDeleteTask = async (task:any) => {
+    // Example of deleting a task (assuming you have a selected task to delete)   
+    const responseTask =task/* ?.DTQ */
+    const prevDate =responseTask.PDATE
+    const summary = responseTask.PSUMMARY    
+    const prevTime = responseTask.PTIME
+    
+    const resendAI = [{
+     "previous TaskDate":prevDate,
+     "taskSummary":summary,     
+     "previous Task Time":prevTime
+    }
+     
+    ]
+    
+    console.log(resendAI)
+    
+    //filter tasks by date
+    const filteredTasks = filterTasksByDate(tasks, /* prevDate */'2024-07-15')
 
-    try {
-      // Example using fetch to delete a task via backend API
-      const response = await fetch(`https://gr-8-api.onrender.com/tasks/task/${selectedTaskId}`, {
-        method: 'DELETE',
-      });
+    console.log(filteredTasks)
 
-      if (!response.ok) {
-        throw new Error('Failed to delete task');
+     try {
+        
+      const deleteResponse  = await await getTaskGuilty(filteredTasks, responseTask)
+
+    const aiDelete:any = deleteResponse
+
+
+      try {
+        // Example using fetch to delete a task via backend API
+        const taskToDelete = {        
+          _id: aiDelete._id,
+          
       }
-
-      // Dispatch Redux action to delete task from tasks state locally
-      dispatch(deleteTaskSuccess(selectedTaskId));
+        const response = await fetch(`${URL}/tasks/task/${taskToDelete._id}`, {
+          method: 'DELETE',
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to delete task');
+        }
+  
+        // Dispatch Redux action to delete task from tasks state locally
+        dispatch(deleteTaskSuccess(taskToDelete._id));
+      } catch (error) {
+        console.error('Error deleting task:', error);
+      }
     } catch (error) {
       console.error('Error deleting task:', error);
     }
-  };
+ 
+    
+  }; 
+
+  const filterTasksByDate = (tasks: any, dateTime: string): any | string => {
+    const dateToMatch = dateTime.split('T')[0];
+
+    const filteredTasks = tasks.filter((task: any) => {
+        const taskDate = task.dueDate.split('T')[0];
+        return taskDate === dateToMatch;
+    });
+
+    // Return a string message if no tasks match the criteria
+    if (filteredTasks.length === 0) {
+        return 'No tasks found for the specified date.';
+    }
+
+    return filteredTasks;
+};
 
   const isSendDisabled = query.trim().length === 0;
 

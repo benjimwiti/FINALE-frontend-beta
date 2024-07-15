@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { checkAuthenticationStatus, initializeAuth } from './app/store/slices/authSlice';
 
 
+
 function App() {
   const isAuthenticated = useSelector((state: RootState)=> state.auth.isAuthenticated);
   const dispatch = useDispatch();

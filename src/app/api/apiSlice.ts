@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 //@ts-ignore
 import * as typeRef from "../../../node_modules/@reduxjs/toolkit/dist/query/react/buildHooks"
+import { URL} from '../../URL';
 
 export type Task = {
   _id: string;
@@ -21,6 +22,7 @@ export type User = {
   tasks: Task[]
 };
 
+
 /* exportt interface RefreshResponse {
   accessToken: string;
 }
@@ -33,7 +35,7 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
        /* baseUrl: 'http://localhost:8000',  */
-       baseUrl: 'https://gr-8-api.onrender.com', 
+       baseUrl: URL, 
       credentials: 'include'
       /* prepareHeaders: (headers, { getState }) => {
         const state = getState() as RootState;

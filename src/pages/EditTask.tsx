@@ -6,7 +6,7 @@ import Sidebar from '../components/Common/SideBar';
 import { updateTaskSuccess } from '../app/store/slices/taskSlice';
 //@ts-ignore
 import { useSelector,  useDispatch } from 'react-redux';
-import AIChat from '../components/Common/AIChat'
+import AI from '../components/Common/AI'
 /* import { updateTask } from '../app/store/slices/taskSlice'; */
 
 const EditTask: React.FC = () => {
@@ -117,7 +117,7 @@ const EditTask: React.FC = () => {
               Due Date
             </label>
             <input
-              type='date'
+              type='datetime-local'
               id='dueDate'
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
@@ -135,7 +135,7 @@ const EditTask: React.FC = () => {
             {isUpdating ? 'Updating...' : 'Update Task'}
           </button>
         </form>
-        <AIChat/>
+        <AI/>
       </div>
     </div>
   );

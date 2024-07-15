@@ -6,7 +6,8 @@ import { RootState } from '../app/store/store';
 import { useSelector , useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createTaskSuccess } from '../app/store/slices/taskSlice';
-import AIChat from '../components/Common/AIChat'
+import AI from '../components/Common/AI'
+
 /* import { addTask } from '../app/store/slices/taskSlice'; */
 
 const Create: React.FC = () => {
@@ -141,7 +142,7 @@ const Create: React.FC = () => {
            {isLoading ? 'Creating...' : 'Create Task'}
           </button>
         </form>
-        <AIChat/>
+        <AI/>
       </div>
     </div>
   );
