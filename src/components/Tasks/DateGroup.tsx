@@ -10,8 +10,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import './task.css'; // Adjust the path as per your project structure
 
 const AllTasks: React.FC = () => {
-  const currentUser: any = useSelector((state: RootState) => state.auth.user);
+
+  /*  const user = {
+    "_id": "668fc7a8241da77ed01d72d5",
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+  };  */
+  /* const user = {
+    "_id": "66902a533a29c357d9c127de",
+    "name": "yap",
+    "email": "yap@example.com"
+  };
+ */
+  /* const currentUser = user; */
+  const currentUser: any  = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
+  // @ts-ignore
   const { data: userTasks } = useFetchUserTasksQuery(currentUser?._id);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
 
@@ -22,12 +36,12 @@ const AllTasks: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
-    //@ts-ignore
+    // @ts-ignore
     if (userTasks?.userTasks) {
-      //@ts-ignore
+      // @ts-ignore
       dispatch(fetchTasksSuccess(userTasks.userTasks));
     }
-  }, [userTasks, dispatch]);
+  }, [userTasks, dispatch ]);
 
   // Effect to update grouped tasks when tasks or userTasks change
   useEffect(() => {
@@ -38,21 +52,18 @@ const AllTasks: React.FC = () => {
     }
   }, [tasks, userTasks]);
 
-  // Function to group tasks by dueDate (date only)
+  // Function to group tasks by dueDate
   const groupTasksByDate = (tasks: Task[]) => {
     const groupedTasks: { [key: string]: Task[] } = {};
 
     tasks.forEach(task => {
-      const dueDate = new Date(task.dueDate);
-      dueDate.setHours(0, 0, 0, 0); // Reset time to 00:00:00
-      const formattedDueDate = dueDate.toISOString().split('T')[0]; // Get YYYY-MM-DD format
-
-      if (!groupedTasks[formattedDueDate]) {
-        groupedTasks[formattedDueDate] = [];
+      const dueDate = new Date(task.dueDate).toLocaleString();
+      if (!groupedTasks[dueDate]) {
+        groupedTasks[dueDate] = [];
         // Initialize dropdown state for each group
-        isDropdownOpen[formattedDueDate] = false;
+        isDropdownOpen[dueDate] = false;
       }
-      groupedTasks[formattedDueDate].push(task);
+      groupedTasks[dueDate].push(task);
     });
 
     // Sort keys (dates) in ascending order (oldest to most recent)
@@ -90,6 +101,7 @@ const AllTasks: React.FC = () => {
 
   return (
     <div>
+      
       {Object.keys(groupedTasks).length > 0 ? (
         Object.keys(groupedTasks).map((dueDate, index) => (
           <div key={index} className="mb-4">
